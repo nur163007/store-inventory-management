@@ -1,11 +1,11 @@
 <?php
 
 namespace App\Http\Controllers;
+use App\Models\Brand;
 
-use App\Models\Category;
 use Illuminate\Http\Request;
 
-class CategoryController extends Controller
+class BrandController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -14,9 +14,9 @@ class CategoryController extends Controller
      */
     public function index()
     {
-        $category= Category::orderby('created_at','DESC')->get();
+        $brands= Brand::orderby('created_at','DESC')->get();
         // dd($category);
-        return view('category.index',compact('category'));
+        return view('brands.index',compact('brands'));
     }
 
     /**
@@ -26,7 +26,7 @@ class CategoryController extends Controller
      */
     public function create()
     {
-        return view('category.create');
+        return view('brands.create');
     }
 
     /**
@@ -37,18 +37,16 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
-        // return $request->all();
         $this->validate($request,[
-            'category_name' => 'required|min:5|max:60|unique:categories'
+            'brand_name' => 'required|min:2|max:25|unique:brands'
         ]);
 
-        $category = new Category();
-        $category->category_name = $request->category_name;
-        if($category->save()){
-            flash('Category Successfully saved')->success();
+        $brands = new Brand();
+        $brands->brand_name = $request->brand_name;
+        if($brands->save()){
+            flash('Brand Successfully saved')->success();
             return back();
         }
-
     }
 
     /**
@@ -70,9 +68,8 @@ class CategoryController extends Controller
      */
     public function edit($id)
     {
-        // dd($id);
-        $category = Category::findOrFail($id);
-        return view('category.edit',compact('category'));
+        $brands = Brand::findOrFail($id);
+        return view('brands.edit',compact('brands'));
     }
 
     /**
@@ -84,15 +81,15 @@ class CategoryController extends Controller
      */
     public function update(Request $request, $id)
     {
-          $this->validate($request,[
-            'category_name' => 'required|min:5|max:60|unique:categories,category_name,'.$id
+        $this->validate($request,[
+            'brand_name' => 'required|min:2|max:25|unique:brands,brand_name,'.$id
         ]);
 
-        $category = Category::findOrFail($id);
-        $category->category_name = $request->category_name;
-        if($category->save()){
-            flash('Category Successfully updated')->success();
-            return redirect()->route('categories.index');
+        $brands = Brand::findOrFail($id);
+        $brands->brand_name = $request->brand_name;
+        if($brands->save()){
+            flash('Brand Successfully updated')->success();
+            return redirect()->route('brands.index');
         }
     }
 
@@ -104,11 +101,11 @@ class CategoryController extends Controller
      */
     public function destroy($id)
     {
-              $category = Category::findOrFail($id);
+        $brands = Brand::findOrFail($id);
 
-            if($category->delete()){
-            flash('Category Successfully deleted')->success();
-            return redirect()->route('categories.index');
-        }
+        if($brands->delete()){
+        flash('Brand Successfully deleted')->success();
+        return redirect()->route('brands.index');
+    }
     }
 }
